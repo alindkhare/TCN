@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch
 import torch.nn as nn
 from torch.nn.utils import weight_norm
-from tcn import Chomp1d
+from TCN.tcn import Chomp1d
 
 
 class Conv1dWtNorm(nn.Module):
