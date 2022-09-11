@@ -9,6 +9,7 @@ import sys
 sys.path.append("../../")
 from TCN.word_cnn.utils import *
 from TCN.word_cnn.model import *
+from TCN.elastic_tcn import ElasticTCN
 import pickle
 from random import randint
 
@@ -19,6 +20,8 @@ parser.add_argument('--batch_size', type=int, default=16, metavar='N',
                     help='batch size (default: 16)')
 parser.add_argument('--cuda', action='store_false',
                     help='use CUDA (default: True)')
+parser.add_argument('--elastic', action='store_true',
+                    help='use elastic tcn network')
 parser.add_argument('--dropout', type=float, default=0.45,
                     help='dropout applied to layers (default: 0.45)')
 parser.add_argument('--emb_dropout', type=float, default=0.25,
@@ -76,7 +79,13 @@ k_size = args.ksize
 dropout = args.dropout
 emb_dropout = args.emb_dropout
 tied = args.tied
-model = TCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied)
+if args.elastic:
+    depth_list = [0,1,2]
+    expand_ratio_list = [0.1, 0.2, 0.25, 0.5, 1]
+    model  = ElasticTCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied, depth_list=depth_list, expand_ratio_list=expand_ratio_list)
+    model.set_max_net()
+else:
+    model = TCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied)
 
 if args.cuda:
     model.cuda()
