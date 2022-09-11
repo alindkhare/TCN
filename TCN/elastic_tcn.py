@@ -1,5 +1,5 @@
 import imp
-from dynamic_layers import DynamicTemporalBlock
+from TCN.dynamic_layers import DynamicTemporalBlock
 from ofa.utils import val2list
 import random
 import torch.nn as nn

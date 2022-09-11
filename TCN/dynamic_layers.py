@@ -5,8 +5,9 @@ import torch.nn.functional as F
 import torch
 import torch.nn as nn
 from torch.nn.utils import weight_norm
-from tcn import Chomp1d
-from layers import MyTemporalBlock
+from TCN.tcn import Chomp1d
+# from layers import MyTemporalBlock
+from TCN.layers import MyTemporalBlock
 
 
 class DynamicConv1dWtNorm(nn.Module):
