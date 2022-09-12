@@ -39,11 +39,15 @@ class Conv1dWtNorm(nn.Module):
         
         self.dim = dim
         if weight_norm:
-            self.conv_g = Parameter(
+            # self.conv_g = Parameter(
+            #     norm_except_dim(weight, 2, dim=self.dim).data
+            # )
+            # self.conv_v = Parameter(Parameter(weight.data))
+           
+            self.register_parameter("conv_g", Parameter(
                 norm_except_dim(weight, 2, dim=self.dim).data
-            )
-            self.conv_v = Parameter(Parameter(weight.data))
-        # self.active_out_channel = self.max_out_channels
+            ))
+            self.register_parameter("conv_v",Parameter(weight.data) )
 
     def get_active_filter(self):
         if weight_norm:
