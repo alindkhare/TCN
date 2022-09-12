@@ -160,20 +160,20 @@ class DynamicTemporalBlock(nn.Module):
         middle_channel = self.active_middle_channels
         out_channel = self.active_out_channel
 
-        sub_layer.conv1.conv.conv_g.data.copy_(
+        sub_layer.conv1.conv.weight_g.data.copy_(
             self.conv1.conv_g.data[:middle_channel, :, :]
         )
-        sub_layer.conv1.conv.conv_v.data.copy_(
+        sub_layer.conv1.conv.weight_v.data.copy_(
             self.conv1.conv_v.data[:middle_channel, :in_channel, :]
         )
         sub_layer.conv1.conv.bias.data.copy_(
             self.conv1.conv.bias.data[:middle_channel]
         )
 
-        sub_layer.conv2.conv.conv_g.data.copy_(
+        sub_layer.conv2.conv.weight_g.data.copy_(
             self.conv2.conv_g.data[:out_channel, :, :]
         )
-        sub_layer.conv2.conv.conv_v.data.copy_(
+        sub_layer.conv2.conv.weight_v.data.copy_(
             self.conv2.conv_v.data[:out_channel, :middle_channel, :]
         )
         sub_layer.conv2.conv.bias.data.copy_(
