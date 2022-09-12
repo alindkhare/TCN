@@ -8,7 +8,7 @@ from torch.nn.utils import weight_norm
 from TCN.tcn import Chomp1d
 # from layers import MyTemporalBlock
 from TCN.layers import MyTemporalBlock
-
+from ofa.utils.pytorch_utils import get_net_device
 
 class DynamicConv1dWtNorm(nn.Module):
     def __init__(
@@ -148,6 +148,10 @@ class DynamicTemporalBlock(nn.Module):
             self.padding,
             self.dropout,
         )
+        sub_layer = sub_layer.to(get_net_device(self))
+        if not preserve_weight:
+            return sub_layer
+        
         middle_channel = self.active_middle_channels
         out_channel = self.active_out_channel
 
