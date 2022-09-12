@@ -84,6 +84,7 @@ if args.elastic:
     expand_ratio_list = [0.1, 0.2, 0.25, 0.5, 1]
     model  = ElasticTCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied, depth_list=depth_list, expand_ratio_list=expand_ratio_list)
     model.set_max_net()
+    model = model.get_active_subnet()
 else:
     model = TCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied)
 
