@@ -17,7 +17,7 @@ class Conv1dWtNorm(nn.Module):
         dilation=1,
         padding=0,
         dim=0,
-        weight_norm=True,
+        weight_norm_bool=True,
     ):
         super(Conv1dWtNorm, self).__init__()
         self.in_channels = in_channels
@@ -36,7 +36,8 @@ class Conv1dWtNorm(nn.Module):
         )
       
         self.dim = dim
-        if weight_norm:
+        self.weight_norm_bool = weight_norm_bool
+        if weight_norm_bool:
             self.conv = weight_norm(self.conv)
             # weight = self.conv.weight
             # del self.conv._parameters["weight"]
@@ -51,7 +52,7 @@ class Conv1dWtNorm(nn.Module):
             # self.register_parameter("conv_v",Parameter(weight.data) )
 
     def get_active_filter(self):
-        if weight_norm:
+        if self.weight_norm_bool:
             return _weight_norm(self.conv_v, self.conv_g, self.dim)
         return self.conv.weight
 

@@ -20,7 +20,7 @@ class DynamicConv1dWtNorm(nn.Module):
         dilation=1,
         padding=0,
         dim=0,
-        weight_norm=True,
+        weight_norm_bool=True,
     ):
         super(DynamicConv1dWtNorm, self).__init__()
         self.max_in_channels = max_in_channels
@@ -41,8 +41,8 @@ class DynamicConv1dWtNorm(nn.Module):
         # weight.requires_grad = False
         self.dim = dim
         
-       
-        if weight_norm:
+        self.weight_norm_bool = weight_norm_bool
+        if weight_norm_bool:
             weight = self.conv.weight
             del self.conv._parameters["weight"]
             self.register_parameter("conv_g", Parameter(
@@ -52,7 +52,7 @@ class DynamicConv1dWtNorm(nn.Module):
         self.active_out_channel = self.max_out_channels
 
     def get_active_filter(self, out_channel, in_channel):
-        if weight_norm:
+        if self.weight_norm_bool:
             return _weight_norm(
                 self.conv_v[:out_channel, :in_channel, :],
                 self.conv_g[:out_channel, :, :],
@@ -124,7 +124,7 @@ class DynamicTemporalBlock(nn.Module):
         self.dropout2 = nn.Dropout(dropout)
         self.downsample = (
             DynamicConv1dWtNorm(
-                maxin_channel, maxout_channel, 1, weight_norm=False
+                maxin_channel, maxout_channel, 1, weight_norm_bool=False
             )
             if maxin_channel != maxout_channel
             else None
