@@ -35,6 +35,8 @@ class Conv1dWtNorm(nn.Module):
             dilation=dilation,
         )
         weight = self.conv.weight
+        del self.conv._parameters["weight"]
+        
         self.dim = dim
         if weight_norm:
             self.conv_g = Parameter(
@@ -49,7 +51,8 @@ class Conv1dWtNorm(nn.Module):
         return self.conv.weight
 
     def init_weights(self):
-        self.conv.weight.data.normal_(0, 0.01)
+        # self.conv.weight.data.normal_(0, 0.01)
+        pass
 
     def forward(self, x, out_channel=None):
         # if out_channel is None:
