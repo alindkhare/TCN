@@ -38,6 +38,8 @@ class DynamicConv1dWtNorm(nn.Module):
             dilation=dilation,
         )
         weight = self.conv.weight
+        # weight.requires_grad = False
+        del self.conv._parameters["weight"]
         self.dim = dim
         if weight_norm:
             self.conv_g = Parameter(
