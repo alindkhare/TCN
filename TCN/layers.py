@@ -34,20 +34,21 @@ class Conv1dWtNorm(nn.Module):
             padding=padding,
             dilation=dilation,
         )
-        weight = self.conv.weight
-        del self.conv._parameters["weight"]
-        
+      
         self.dim = dim
         if weight_norm:
-            # self.conv_g = Parameter(
-            #     norm_except_dim(weight, 2, dim=self.dim).data
-            # )
-            # self.conv_v = Parameter(Parameter(weight.data))
+            self.conv = weight_norm(self.conv)
+            # weight = self.conv.weight
+            # del self.conv._parameters["weight"]
+            # # self.conv_g = Parameter(
+            # #     norm_except_dim(weight, 2, dim=self.dim).data
+            # # )
+            # # self.conv_v = Parameter(Parameter(weight.data))
            
-            self.register_parameter("conv_g", Parameter(
-                norm_except_dim(weight, 2, dim=self.dim).data
-            ))
-            self.register_parameter("conv_v",Parameter(weight.data) )
+            # self.register_parameter("conv_g", Parameter(
+            #     norm_except_dim(weight, 2, dim=self.dim).data
+            # ))
+            # self.register_parameter("conv_v",Parameter(weight.data) )
 
     def get_active_filter(self):
         if weight_norm:
@@ -62,11 +63,12 @@ class Conv1dWtNorm(nn.Module):
         # if out_channel is None:
         #     out_channel = self.active_out_channel
         # in_channel = x.size(1)
-        filters = self.get_active_filter().contiguous()
+        # filters = self.get_active_filter().contiguous()
 
         y = F.conv1d(
             x,
-            filters,
+            # filters,
+            self.conv.weight,
             self.conv.bias,
             self.stride,
             self.padding,

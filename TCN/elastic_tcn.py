@@ -118,12 +118,14 @@ class DynamicTemporalConvNet(nn.Module):
 
 
 class MyTCN(nn.Module):
-    def __init__(self, encoder, tcn, decoder, drop):
+    def __init__(self, encoder, tcn, decoder, drop, tied_weights=False):
         super(MyTCN, self).__init__()
         self.encoder = encoder
         self.tcn = tcn
         self.decoder = decoder
         self.drop = drop
+        if tied_weights:
+            self.decoder.weight = self.encoder.weight
 
     def eval(self):
         self.encoder.eval()
@@ -178,6 +180,7 @@ class ElasticTCN(nn.Module):
         self.last_channel = num_channels[-1]
 
         self.decoder = nn.Linear(num_channels[-1], output_size)
+        self.tied_weights = tied_weights
         if tied_weights:
             if num_channels[-1] != input_size:
                 raise ValueError(
@@ -225,7 +228,7 @@ class ElasticTCN(nn.Module):
         decoder.bias.data.copy_(self.decoder.bias.data)
 
         return MyTCN(
-            encoder, active_tcn, decoder, nn.Dropout(self.emb_dropout)
+            encoder, active_tcn, decoder, nn.Dropout(self.emb_dropout), tied_weights=self.tied_weights
         )
 
     def init_weights(self):

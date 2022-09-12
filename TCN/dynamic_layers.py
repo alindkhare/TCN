@@ -37,18 +37,17 @@ class DynamicConv1dWtNorm(nn.Module):
             padding=padding,
             dilation=dilation,
         )
-        weight = self.conv.weight
+        
         # weight.requires_grad = False
-        del self.conv._parameters["weight"]
         self.dim = dim
+        
+       
         if weight_norm:
-            # self.conv_g = Parameter(
-            #     norm_except_dim(weight, 2, dim=self.dim).data
-            # )
+            weight = self.conv.weight
+            del self.conv._parameters["weight"]
             self.register_parameter("conv_g", Parameter(
                 norm_except_dim(weight, 2, dim=self.dim).data
             ))
-            # self.conv_v = Parameter(Parameter(weight.data))
             self.register_parameter("conv_v",Parameter(weight.data) )
         self.active_out_channel = self.max_out_channels
 
@@ -180,6 +179,10 @@ class DynamicTemporalBlock(nn.Module):
         sub_layer.conv2.conv.bias.data.copy_(
             self.conv2.conv.bias.data[:out_channel]
         )
+        if self.downsample is not None:
+            sub_layer.downsample.weight.data.copy_(self.downsample.weight.data[:out_channel, :in_channel, :])
+            sub_layer.downsample.bias.data.copy_(self.downsample.bias.data[:out_channel])
+            
         return sub_layer
 
     def forward(self, x):
