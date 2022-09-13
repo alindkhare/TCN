@@ -19,7 +19,8 @@ class MyTemporalConvNet(nn.Module):
             block.train()
     
     def cuda(self, device = None):
-        for block in self.blocks:
+        for i,block in enumerate(self.blocks):
+            print(f"Transfer block-{i}")
             block.cuda(device)
 
     def forward(self, x):
