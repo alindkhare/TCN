@@ -140,8 +140,8 @@ class DynamicTemporalBlock(nn.Module):
         
         self.relu.train()
         
-        if self.dropout is not None:
-            self.dropout.train()
+        if self.downsample is not None:
+            self.downsample.train()
     
     
     def eval(self):
@@ -157,8 +157,8 @@ class DynamicTemporalBlock(nn.Module):
         
         self.relu.eval()
         
-        if self.dropout is not None:
-            self.dropout.eval()
+        if self.downsample is not None:
+            self.downsample.eval()
         
         
     def init_weights(self):
