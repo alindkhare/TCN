@@ -74,7 +74,7 @@ class ElaticTemporalBlock1(nn.Module):
     
     def apply_conv(self, conv_layer, x):
         filters = self.get_active_filter(conv_layer)
-        F.conv1d(
+        return F.conv1d(
             x,
             filters,
             conv_layer.bias,
