@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import sys
 sys.path.append("../../")
-from TCN.tcn import TemporalConvNet
+from TCN.tcn import TemporalConvNet, ElasticTemporalConvNet1
 
 
 class TCN(nn.Module):
@@ -11,7 +11,7 @@ class TCN(nn.Module):
                  kernel_size=2, dropout=0.3, emb_dropout=0.1, tied_weights=False):
         super(TCN, self).__init__()
         self.encoder = nn.Embedding(output_size, input_size)
-        self.tcn = TemporalConvNet(input_size, num_channels, kernel_size, dropout=dropout)
+        self.tcn = ElasticTemporalConvNet1(input_size, num_channels, kernel_size, dropout=dropout)
 
         self.decoder = nn.Linear(num_channels[-1], output_size)
         if tied_weights:
