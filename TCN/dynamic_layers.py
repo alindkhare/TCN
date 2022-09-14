@@ -172,8 +172,8 @@ class DynamicTemporalBlock(nn.Module):
         
         
     def init_weights(self):
-        # self.conv1.conv.weight.data.normal_(0, 0.01)
-        # self.conv2.conv.weight.data.normal_(0, 0.01)
+        self.conv1.conv.weight.data.normal_(0, 0.01)
+        self.conv2.conv.weight.data.normal_(0, 0.01)
         if self.downsample is not None:
             self.downsample.conv.weight.data.normal_(0, 0.01)
 
