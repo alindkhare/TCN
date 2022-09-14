@@ -137,21 +137,21 @@ class DynamicTemporalBlock(nn.Module):
         self.relu = nn.ReLU()
         self.init_weights()
 
-    def train(self):
-        self.conv1.train()
-        self.chomp1.train()
-        self.relu1.train()
-        self.dropout1.train()
+    def train(self, mode=True):
+        self.conv1.train(mode)
+        self.chomp1.train(mode)
+        self.relu1.train(mode)
+        self.dropout1.train(mode)
         
-        self.conv2.train()
-        self.chomp2.train()
-        self.relu2.train()
-        self.dropout2.train()
+        self.conv2.train(mode)
+        self.chomp2.train(mode)
+        self.relu2.train(mode)
+        self.dropout2.train(mode)
         
-        self.relu.train()
+        self.relu.train(mode)
         
         if self.downsample is not None:
-            self.downsample.train()
+            self.downsample.train(mode)
     
     
     def eval(self):

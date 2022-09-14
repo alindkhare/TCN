@@ -79,9 +79,9 @@ class DynamicTemporalConvNet(nn.Module):
         for block in self.blocks:
             block.eval()
 
-    def train(self):
+    def train(self, mode=True):
         for block in self.blocks:
-            block.train()
+            block.train(mode)
     
     def cuda(self, device = None):
         for block in self.blocks:
