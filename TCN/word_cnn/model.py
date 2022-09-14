@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import sys
 sys.path.append("../../")
-from TCN.tcn import TemporalConvNet, ElasticTemporalConvNet1
+from TCN.tcn import TemporalConvNet
 
 
 class TCN(nn.Module):
