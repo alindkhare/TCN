@@ -114,7 +114,6 @@ class DynamicTemporalConvNet(nn.Module):
 
     def forward(self, x):
         out = x
-        print(f"Effective deph: {len(self.blocks) - self.runtime_depth}")
         for block in self.blocks[: len(self.blocks) - self.runtime_depth]:
             out = block(out)
         return out
