@@ -3,7 +3,7 @@ import torch.nn as nn
 from torch.nn.utils import weight_norm
 from torch import _weight_norm
 import torch.nn.functional as F
-
+from TCN.dynamic_layers import DynamicTemporalBlock
 class Chomp1d(nn.Module):
     def __init__(self, chomp_size):
         super(Chomp1d, self).__init__()
@@ -114,7 +114,7 @@ class TemporalConvNet(nn.Module):
             dilation_size = 2 ** i
             in_channels = num_inputs if i == 0 else num_channels[i-1]
             out_channels = num_channels[i]
-            layers += [TemporalBlock(in_channels, out_channels, kernel_size, stride=1, dilation=dilation_size,
+            layers += [DynamicTemporalBlock(in_channels, out_channels, kernel_size, stride=1, dilation=dilation_size,
                                      padding=(kernel_size-1) * dilation_size, dropout=dropout)]
 
         self.network = nn.Sequential(*layers)
@@ -122,22 +122,22 @@ class TemporalConvNet(nn.Module):
     def forward(self, x):
         return self.network(x)
 
-class ElasticTemporalConvNet1(nn.Module):
-    def __init__(self, num_inputs, num_channels, kernel_size=2, dropout=0.2):
-        super(ElasticTemporalConvNet1, self).__init__()
-        self.blocks = []
-        num_levels = len(num_channels)
-        for i in range(num_levels):
-            dilation_size = 2 ** i
-            in_channels = num_inputs if i == 0 else num_channels[i-1]
-            out_channels = num_channels[i]
-            self.blocks += [ElaticTemporalBlock1(in_channels, out_channels, kernel_size, stride=1, dilation=dilation_size,
-                                     padding=(kernel_size-1) * dilation_size, dropout=dropout)]
+# class ElasticTemporalConvNet1(nn.Module):
+#     def __init__(self, num_inputs, num_channels, kernel_size=2, dropout=0.2):
+#         super(ElasticTemporalConvNet1, self).__init__()
+#         self.blocks = []
+#         num_levels = len(num_channels)
+#         for i in range(num_levels):
+#             dilation_size = 2 ** i
+#             in_channels = num_inputs if i == 0 else num_channels[i-1]
+#             out_channels = num_channels[i]
+#             self.blocks += [ElaticTemporalBlock1(in_channels, out_channels, kernel_size, stride=1, dilation=dilation_size,
+#                                      padding=(kernel_size-1) * dilation_size, dropout=dropout)]
 
-        # self.network = nn.Sequential(*layers)
+#         # self.network = nn.Sequential(*layers)
 
-    def forward(self, x):
-        out = x
-        for block in self.blocks:
-            out = block(out)
-        return out
+#     def forward(self, x):
+#         out = x
+#         for block in self.blocks:
+#             out = block(out)
+#         return out
