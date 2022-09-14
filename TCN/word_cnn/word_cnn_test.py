@@ -22,6 +22,8 @@ parser.add_argument('--cuda', action='store_false',
                     help='use CUDA (default: True)')
 parser.add_argument('--elastic', action='store_true',
                     help='use elastic tcn network')
+parser.add_argument('--subnet', action='store_true',
+                    help='use elastic tcn network')
 parser.add_argument('--dropout', type=float, default=0.45,
                     help='dropout applied to layers (default: 0.45)')
 parser.add_argument('--emb_dropout', type=float, default=0.25,
@@ -84,7 +86,8 @@ if args.elastic:
     expand_ratio_list = [0.1, 0.2, 0.25, 0.5, 1.0]
     model  = ElasticTCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied, depth_list=depth_list, expand_ratio_list=expand_ratio_list)
     model.set_max_net()
-    # model = model.get_active_subnet()
+    if args.subnet:
+        model = model.get_active_subnet()
 else:
     model = TCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied)
 
