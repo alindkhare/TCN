@@ -43,19 +43,14 @@ class DynamicConv1dWtNorm(nn.Module):
         
         self.weight_norm_bool = weight_norm_bool
         if weight_norm_bool:
-            weight = self.conv.weight
-            del self.conv._parameters["weight"]
-            self.register_parameter("conv_g", Parameter(
-                norm_except_dim(weight, 2, dim=self.dim).data
-            ))
-            self.register_parameter("conv_v",Parameter(weight.data) )
+            self.conv = weight_norm(self.conv)
         self.active_out_channel = self.max_out_channels
 
     def get_active_filter(self, out_channel, in_channel):
         if self.weight_norm_bool:
             return _weight_norm(
-                self.conv_v[:out_channel, :in_channel, :],
-                self.conv_g[:out_channel, :, :],
+                self.conv.weight_v[:out_channel, :in_channel, :],
+                self.conv.weight_g[:out_channel, :, :],
                 self.dim,
             )
         return self.conv.weight[:out_channel, :in_channel, :]
@@ -161,20 +156,20 @@ class DynamicTemporalBlock(nn.Module):
         out_channel = self.active_out_channel
 
         sub_layer.conv1.conv.weight_g.data.copy_(
-            self.conv1.conv_g.data[:middle_channel, :, :]
+            self.conv1.conv.weight_g.data[:middle_channel, :, :]
         )
         sub_layer.conv1.conv.weight_v.data.copy_(
-            self.conv1.conv_v.data[:middle_channel, :in_channel, :]
+            self.conv1.conv.weight_v.data[:middle_channel, :in_channel, :]
         )
         sub_layer.conv1.conv.bias.data.copy_(
             self.conv1.conv.bias.data[:middle_channel]
         )
 
         sub_layer.conv2.conv.weight_g.data.copy_(
-            self.conv2.conv_g.data[:out_channel, :, :]
+            self.conv2.conv.weight_g.data[:out_channel, :, :]
         )
         sub_layer.conv2.conv.weight_v.data.copy_(
-            self.conv2.conv_v.data[:out_channel, :middle_channel, :]
+            self.conv2.conv.weight_v.data[:out_channel, :middle_channel, :]
         )
         sub_layer.conv2.conv.bias.data.copy_(
             self.conv2.conv.bias.data[:out_channel]

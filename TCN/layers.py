@@ -39,37 +39,22 @@ class Conv1dWtNorm(nn.Module):
         self.weight_norm_bool = weight_norm_bool
         if weight_norm_bool:
             self.conv = weight_norm(self.conv)
-            # weight = self.conv.weight
-            # del self.conv._parameters["weight"]
-            # # self.conv_g = Parameter(
-            # #     norm_except_dim(weight, 2, dim=self.dim).data
-            # # )
-            # # self.conv_v = Parameter(Parameter(weight.data))
-           
-            # self.register_parameter("conv_g", Parameter(
-            #     norm_except_dim(weight, 2, dim=self.dim).data
-            # ))
-            # self.register_parameter("conv_v",Parameter(weight.data) )
+
 
     def get_active_filter(self):
         if self.weight_norm_bool:
-            return _weight_norm(self.conv_v, self.conv_g, self.dim)
+            return _weight_norm(self.conv.weight_v, self.conv.weight_g, self.dim)
         return self.conv.weight
 
     def init_weights(self):
-        # self.conv.weight.data.normal_(0, 0.01)
         pass
 
     def forward(self, x, out_channel=None):
-        # if out_channel is None:
-        #     out_channel = self.active_out_channel
-        # in_channel = x.size(1)
-        # filters = self.get_active_filter().contiguous()
+        filters = self.get_active_filter().contiguous()
 
         y = F.conv1d(
             x,
-            # filters,
-            self.conv.weight,
+            filters,
             self.conv.bias,
             self.stride,
             self.padding,
