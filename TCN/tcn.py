@@ -124,7 +124,7 @@ class TemporalConvNet(nn.Module):
 
 class ElasticTemporalConvNet1(nn.Module):
     def __init__(self, num_inputs, num_channels, kernel_size=2, dropout=0.2):
-        super(TemporalConvNet, self).__init__()
+        super(ElasticTemporalConvNet1, self).__init__()
         blocks = []
         num_levels = len(num_channels)
         for i in range(num_levels):
