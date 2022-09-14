@@ -48,6 +48,7 @@ class DynamicConv1dWtNorm(nn.Module):
 
     def get_active_filter(self, out_channel, in_channel):
         if self.weight_norm_bool:
+            print(f"applying weight norm out_channel: {out_channel} in_channel: {in_channel}")
             return _weight_norm(
                 self.conv.weight_v[:out_channel, :in_channel, :],
                 self.conv.weight_g[:out_channel, :, :],
