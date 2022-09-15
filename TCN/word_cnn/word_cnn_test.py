@@ -12,7 +12,7 @@ from TCN.word_cnn.model import *
 from TCN.elastic_tcn import ElasticTCN
 import pickle
 from random import randint
-
+import json
 
 parser = argparse.ArgumentParser(description='Sequence Modeling - Word-level Language Modeling')
 
@@ -58,6 +58,12 @@ parser.add_argument('--seq_len', type=int, default=80,
                     help='total sequence length, including effective history (default: 80)')
 parser.add_argument('--corpus', action='store_true',
                     help='force re-make the corpus (default: False)')
+parser.add_argument(
+        "--subnet_dim",
+        type=json.loads,
+        default="null",
+        help="Subnets participating in training and possibly their starting and final weights during averaging",
+)
 args = parser.parse_args()
 
 # Set the random seed manually for reproducibility.
@@ -86,8 +92,12 @@ if args.elastic:
     expand_ratio_list = [0.1, 0.2, 0.25, 0.5, 1.0]
     model  = ElasticTCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied, depth_list=depth_list, expand_ratio_list=expand_ratio_list)
     model.set_max_net()
+    if args.subnet_dim is not None:
+        model.set_active_subnet(**args.subnet_dim)
     if args.subnet:
         model = model.get_active_subnet()
+      
+            
 else:
     model = TCN(args.emsize, n_words, num_chans, dropout=dropout, emb_dropout=emb_dropout, kernel_size=k_size, tied_weights=tied)
 

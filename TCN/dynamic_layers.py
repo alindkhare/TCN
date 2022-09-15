@@ -5,8 +5,6 @@ import torch.nn.functional as F
 import torch
 import torch.nn as nn
 from torch.nn.utils import weight_norm
-# from TCN.tcn import Chomp1d
-# from layers import MyTemporalBlock
 from TCN.layers import MyTemporalBlock
 from ofa.utils.pytorch_utils import get_net_device
 

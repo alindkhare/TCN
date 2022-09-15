@@ -11,19 +11,6 @@ class MyTemporalConvNet(nn.Module):
         super(MyTemporalConvNet, self).__init__()
         self.blocks = nn.ModuleList(blocks)
 
-    # def eval(self):
-    #     for block in self.blocks:
-    #         block.eval()
-
-    # def train(self):
-    #     for block in self.blocks:
-    #         block.train()
-    
-    # def cuda(self, device = None):
-    #     for i,block in enumerate(self.blocks):
-    #         print(f"Transfer block-{i}")
-    #         block.cuda(device)
-
     def forward(self, x):
         out = x
         for block in self.blocks:
@@ -76,17 +63,6 @@ class DynamicTemporalConvNet(nn.Module):
         if d is not None:
             self.runtime_depth = self.max_depth - d
 
-    # def eval(self):
-    #     for block in self.blocks:
-    #         block.eval()
-
-    # def train(self, mode=True):
-    #     for block in self.blocks:
-    #         block.train(mode)
-    
-    # def cuda(self, device = None):
-    #     for block in self.blocks:
-    #         block.cuda(device)
 
     def set_max_net(self):
         self.set_active_subnet(
@@ -129,24 +105,6 @@ class MyTCN(nn.Module):
         self.drop = drop
         if tied_weights:
             self.decoder.weight = self.encoder.weight
-
-    # def eval(self):
-    #     self.encoder.eval()
-    #     self.tcn.eval()
-    #     self.decoder.eval()
-    #     self.drop.eval()
-    
-    # def cuda(self, device = None):
-    #     self.encoder.cuda(device)
-    #     self.tcn.cuda(device)
-    #     self.decoder.cuda(device)
-    #     self.drop.cuda(device)
-
-    # def train(self):
-    #     self.encoder.train()
-    #     self.tcn.train()
-    #     self.decoder.train()
-    #     self.drop.train()
 
     def forward(self, input):
         emb = self.drop(self.encoder(input))
@@ -194,24 +152,6 @@ class ElasticTCN(nn.Module):
         self.drop = nn.Dropout(emb_dropout)
         self.emb_dropout = emb_dropout
         self.init_weights()
-
-    # def eval(self):
-    #     self.encoder.eval()
-    #     self.tcn.eval()
-    #     self.decoder.eval()
-    #     self.drop.eval()
-
-    # def train(self):
-    #     self.encoder.train()
-    #     self.tcn.train()
-    #     self.decoder.train()
-    #     self.drop.train()
-    
-    # def cuda(self, device = None):
-    #     self.encoder.cuda(device)
-    #     self.tcn.cuda(device)
-    #     self.decoder.cuda(device)
-    #     self.drop.cuda(device)
 
     def set_max_net(self):
         self.tcn.set_max_net()
