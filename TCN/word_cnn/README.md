@@ -58,3 +58,14 @@ python word_cnn_test.py --data .data/penn
 ```
 
 would train on the PennTreebank (PTB) dataset, if it is contained in `.data/penn`.
+
+For running elastic TCN (extracting subnet)
+
+```
+python word_cnn_test.py --data ./data/penn --subnet_dim  '{"d": 0, "e": [1.0, 1.0, 1.0, 1.0]}'
+```
+For running elastic TCN (activating subnet)
+
+```python
+python word_cnn_test.py --data ./data/penn --elastic  --subnet_dim  '{"d": 0, "e": [1.0, 1.0, 1.0, 1.0]}'
+```
